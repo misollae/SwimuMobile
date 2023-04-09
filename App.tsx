@@ -1,3 +1,7 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import {
   Text,
@@ -22,6 +26,7 @@ const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const App = () => {
   const [isScanning, setIsScanning] = useState(false);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     // turn on bluetooth if it is not on
@@ -32,7 +37,9 @@ const App = () => {
     const permissionsToGet = [
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
     ];
+
 
     permissionsToGet.forEach(p => {
       if (Platform.OS === 'android' && Platform.Version >= 23) {
@@ -84,6 +91,119 @@ const App = () => {
     }
   };
 
+ const peripherals = new Map();
+ const [bluetoothDevices, setBluetoothDevices] = useState([]);
+
+ useEffect(() => {
+  const handleGetConnectedDevices = () => {
+    BleManager.getConnectedPeripherals([]).then(results => {
+      if (results.length == 0) {
+        console.log('No connected bluetooth devices');
+      } else {
+        for (let i = 0; i < results.length; i++) {
+          let peripheral = results[i];
+          peripheral.connected = true;
+          peripherals.set(peripheral.id, peripheral);
+          setConnected(true);
+          setBluetoothDevices(Array.from(peripherals.values()));
+        }
+      }
+    });
+  };
+
+  let stopListener = BleManagerEmitter.addListener(
+    'BleManagerStopScan',
+    () => {
+      setIsScanning(false);
+      console.log('Scan is stopped');
+      handleGetConnectedDevices();
+    },
+  );
+
+  return () => {
+    stopListener.remove();
+  };
+},);
+
+const connectToPeripheral = peripheral => {
+  if (peripheral.connected) {
+    BleManager.disconnect(peripheral.id).then(() => {
+      peripheral.connected = false;
+      setConnected(false);
+    });
+  } else {
+    BleManager.connect(peripheral.id)
+      .then(() => {
+        let peripheralResponse = peripherals.get(peripheral.id);
+        if (peripheralResponse) {
+          peripheralResponse.connected = true;
+          peripherals.set(peripheral.id, peripheralResponse);
+          setConnected(true);
+          setBluetoothDevices(Array.from(peripherals.values()));
+        }
+      })
+      .catch(error => console.log(error));
+  }
+};
+
+const RenderItem = ({peripheral}) => {
+  const color = peripheral.connected ? 'green' : '#fff';
+  return (
+    <>
+      <Text
+        style={{
+          fontSize: 20,
+          marginLeft: 10,
+          marginBottom: 5,
+          color: isDarkMode ? Colors.white : Colors.black,
+        }}>
+        Nearby Devices:
+      </Text>
+      <TouchableOpacity onPress={() => connectToPeripheral(peripheral)}>
+        <View
+          style={{
+            backgroundColor: color,
+            borderRadius: 5,
+            paddingVertical: 5,
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+          }}>
+          <Text
+            style={{
+              fontSize: 18,
+              textTransform: 'capitalize',
+              color: connected ? Colors.white : Colors.black,
+            }}>
+            {peripheral.name}
+          </Text>
+          <View
+            style={{
+              backgroundColor: color,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: connected ? Colors.white : Colors.black,
+              }}>
+              RSSI: {peripheral.rssi}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: connected ? Colors.white : Colors.black,
+              }}>
+              ID: {peripheral.id}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </>
+  );
+};
+
   return (
     <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
       <StatusBar
@@ -106,7 +226,7 @@ const App = () => {
                 textAlign: 'center',
                 color: isDarkMode ? Colors.white : Colors.black,
               }}>
-              React Native BLE Manager Tutorial
+              Bluetooth Test
             </Text>
           </View>
           <TouchableOpacity
@@ -119,6 +239,11 @@ const App = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {bluetoothDevices.map(peripheral => (
+          <View key={peripheral.id}>
+            <RenderItem peripheral={peripheral} />
+          </View>
+        ))}
     </SafeAreaView>
   );
 };
