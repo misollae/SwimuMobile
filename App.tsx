@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BluetoothScreen from './HomeScreen';
+import BluetoothScreen from './BluetoothScreen';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 
