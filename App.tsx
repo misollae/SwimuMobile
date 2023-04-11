@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
+
 /* eslint-disable react-native/no-inline-styles */
+
 import React, {useState} from 'react';
 import {
   Text,
@@ -17,7 +19,7 @@ import useBLE from './useBLE';
 import { Device } from 'react-native-ble-plx';
 
 const App = () => {
-  const {requestPermissions, scanForDevices, allDevices} = useBLE();
+  const {requestPermissions, scanForDevices, allDevices, connectToDevice} = useBLE();
   const [isScanning, setIsScanning] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -32,6 +34,10 @@ const App = () => {
           scanForDevices();
         }
     });
+  };
+
+  const tryConnect = async (device: Device) => {
+    connectToDevice(device);
   };
 
   return (
@@ -69,7 +75,7 @@ const App = () => {
           </TouchableOpacity>
           {
             allDevices.map((device: Device) => (
-              <Text>{device.name}</Text>
+              <TouchableOpacity key={device.id} onPress={tryConnect.bind(this, device)} ><Text>{device.name}</Text></TouchableOpacity>
             ))
           }
         </View>
