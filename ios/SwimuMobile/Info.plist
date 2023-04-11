@@ -4,6 +4,8 @@
 <dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Allow Bluetooth</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Allow Bluetooth</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
