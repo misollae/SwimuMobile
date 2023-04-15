@@ -21,6 +21,11 @@ const HomeScreen = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const handlePress = () => {
+    console.log('Button pressed');
+    onStartTrain; // call the function from useBLE
+  };
+
   return (
     <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
       <StatusBar
@@ -48,7 +53,7 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <Button title="Start Train" onPress={onStartTrain} />
+      <Button title="Start Train" onPress={handlePress} />
     </SafeAreaView>
   );
 };

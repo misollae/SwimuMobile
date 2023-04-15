@@ -24,6 +24,8 @@ interface BluetoothLowEnergyApi {
     scanForDevices(): void;
     connectToDevice(device: Device): Promise<void>;
     allDevices: Device[];
+    onStartTrain: (error: BleError | null, characteristic: Characteristic | null) => Promise<void>;
+
 }
 
 export default function useBLE(): BluetoothLowEnergyApi {
@@ -142,5 +144,6 @@ export default function useBLE(): BluetoothLowEnergyApi {
         scanForDevices,
         connectToDevice,
         allDevices,
+        onStartTrain,
     };
 }
