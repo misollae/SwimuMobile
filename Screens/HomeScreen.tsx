@@ -1,7 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
-import {useState} from 'react';
-import {Device} from 'react-native-ble-plx';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {
@@ -10,30 +8,19 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
   Button,
   Dimensions,
   StyleSheet,
 } from 'react-native';
-import useBLE from './useBLE';
+import useBLE from '../useBLE';
 
-const BluetoothScreen = () => {
-  const {requestPermissions, scanForDevices, allDevices} = useBLE();
-  const [isScanning, setIsScanning] = useState(false);
-
+const HomeScreen = () => {
+  const {onStartTrain} = useBLE();
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const startScan = async () => {
-    requestPermissions((isGranted: boolean) => {
-      if (isGranted) {
-        setIsScanning(true);
-        scanForDevices();
-      }
-    });
-  };
   return (
     <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
       <StatusBar
@@ -59,23 +46,9 @@ const BluetoothScreen = () => {
               Bluetooth Test
             </Text>
           </View>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.buttonStyle}
-            onPress={startScan}>
-            <Text style={styles.buttonTextStyle}>
-              {isScanning ? 'Scanning...' : 'Scan Bluetooth Devices'}
-            </Text>
-          </TouchableOpacity>
-          {allDevices.map((device: Device) => (
-            <Text>{device.name}</Text>
-          ))}
         </View>
       </ScrollView>
-      <Button
-        title="Go to HomeScreen"
-        // onPress={() => navigation.navigate('Home')}
-      />
+      <Button title="Start Train" onPress={onStartTrain} />
     </SafeAreaView>
   );
 };
@@ -105,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BluetoothScreen;
+export default HomeScreen;

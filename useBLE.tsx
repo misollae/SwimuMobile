@@ -84,6 +84,22 @@ export default function useBLE(): BluetoothLowEnergyApi {
         }
     };
 
+    const onStartTrain = (
+        error: BleError | null,
+        characteristic: Characteristic | null,
+    ) => {
+        if (error){
+            console.error(error);
+            return;
+        } else if (!characteristic?.value){
+            console.log('No charateristic');
+            return;
+        }
+
+        //SEND DATA
+    };
+
+
     const onDataUpdate = (
         error: BleError | null,
         characteristic: Characteristic | null,
