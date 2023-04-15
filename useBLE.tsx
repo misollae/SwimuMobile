@@ -1,8 +1,9 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState } from 'react';
-import { atob } from 'react-native-quick-base64';
+import { atob, btoa } from 'react-native-quick-base64';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { BleError, BleManager, Characteristic, Device } from 'react-native-ble-plx';
 import { LogBox } from 'react-native';
@@ -14,6 +15,9 @@ const bleManager = new BleManager();
 
 const SPORT_DEVICE_SERVICE_UUID       = '0000183E-0000-1000-8000-00805F9B34FB';
 const SPORT_DEVICE_CHARATERISTIC_UUID = '00002B3C-0000-1000-8000-00805F9B34FB';
+
+const TIME_SERVICE_UUID = '00001805-0000-1000-8000-00805F9B34FB';
+const TIME_SERVICE_CHARATERISTIC_UUID = '00002A2B-0000-1000-8000-00805F9B34FB';
 
 interface BluetoothLowEnergyApi {
     requestPermissions(callback: PermissionCallback): Promise<void>;
@@ -84,7 +88,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
         }
     };
 
-    const onStartTrain = (
+    const onStartTrain = async (
         error: BleError | null,
         characteristic: Characteristic | null,
     ) => {
@@ -95,6 +99,18 @@ export default function useBLE(): BluetoothLowEnergyApi {
             console.log('No charateristic');
             return;
         }
+        // Get the current time in milliseconds since epoch
+        const currentTimeMillis = new Date().getTime();
+        const data = new Uint8Array(new Int32Array([currentTimeMillis]).buffer);
+        // Encode the Uint8Array as a Base64 string
+        const base64Data = btoa(String.fromCharCode(...data));
+
+        try {
+            await characteristic.writeWithResponse(base64Data);
+            console.log('Data written successfully');
+          } catch (error) {
+            console.error('Error writing data: ', error);
+          }
 
         //SEND DATA
     };
