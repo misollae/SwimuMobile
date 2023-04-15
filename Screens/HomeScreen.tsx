@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -23,7 +24,7 @@ const HomeScreen = () => {
 
   const handlePress = () => {
     console.log('Button pressed');
-    onStartTrain; // call the function from useBLE
+    onStartTrain(); // call the function from useBLE
   };
 
   return (

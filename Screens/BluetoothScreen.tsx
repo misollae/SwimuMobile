@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import {useState} from 'react';
@@ -22,7 +23,7 @@ interface ScreenNavigation {
 }
 
 const BluetoothScreen = (props: ScreenNavigation) => {
-  const {requestPermissions, scanForDevices, allDevices} = useBLE();
+  const {requestPermissions, scanForDevices, allDevices, connectToDevice} = useBLE();
   const [isScanning, setIsScanning] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -38,6 +39,11 @@ const BluetoothScreen = (props: ScreenNavigation) => {
       }
     });
   };
+
+  const tryConnect = async (device: Device) => {
+    connectToDevice(device);
+  };
+
   return (
     <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
       <StatusBar
@@ -72,7 +78,7 @@ const BluetoothScreen = (props: ScreenNavigation) => {
             </Text>
           </TouchableOpacity>
           {allDevices.map((device: Device) => (
-            <Text>{device.name}</Text>
+              <TouchableOpacity key={device.id} onPress={tryConnect.bind(this, device)} ><Text>{device.name}</Text></TouchableOpacity>
           ))}
         </View>
       </ScrollView>

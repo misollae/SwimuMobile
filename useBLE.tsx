@@ -1,5 +1,5 @@
-/* eslint-disable no-bitwise */
 /* eslint-disable prettier/prettier */
+/* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState } from 'react';
@@ -16,7 +16,7 @@ const bleManager = new BleManager();
 const SPORT_DEVICE_SERVICE_UUID       = '0000183E-0000-1000-8000-00805F9B34FB';
 const SPORT_DEVICE_CHARATERISTIC_UUID = '00002B3C-0000-1000-8000-00805F9B34FB';
 
-const TIME_SERVICE_UUID = '00001805-0000-1000-8000-00805F9B34FB';
+const TIME_SERVICE_UUID               = '00001805-0000-1000-8000-00805F9B34FB';
 const TIME_SERVICE_CHARATERISTIC_UUID = '00002A2B-0000-1000-8000-00805F9B34FB';
 
 interface BluetoothLowEnergyApi {
@@ -24,7 +24,7 @@ interface BluetoothLowEnergyApi {
     scanForDevices(): void;
     connectToDevice(device: Device): Promise<void>;
     allDevices: Device[];
-    onStartTrain: (error: BleError | null, characteristic: Characteristic | null) => Promise<void>;
+    onStartTrain(): void;
 
 }
 
@@ -72,7 +72,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
             setConnectedDevice(deviceConnection);
             bleManager.stopDeviceScan();
             await deviceConnection.discoverAllServicesAndCharacteristics();
-            startStreamingData(device);
+            //startStreamingData(device);
         } catch (e) {
             console.log('Error when connecting: ', e);
         }
@@ -90,31 +90,23 @@ export default function useBLE(): BluetoothLowEnergyApi {
         }
     };
 
-    const onStartTrain = async (
-        error: BleError | null,
-        characteristic: Characteristic | null,
-    ) => {
-        if (error){
-            console.error(error);
-            return;
-        } else if (!characteristic?.value){
-            console.log('No charateristic');
-            return;
+    const onStartTrain = async () => {
+        if (device) {
+            console.log('Olá');
+            try {
+                const characteristics = await device.characteristicsForService(TIME_SERVICE_UUID);
+                const timeCharacteristic = characteristics.find(c => c.uuid === TIME_SERVICE_CHARATERISTIC_UUID);
+
+                const currentTimeMillis = new Date().getTime();
+                const data = new Uint8Array(new Int32Array([currentTimeMillis]).buffer);
+                const base64Data = btoa(String.fromCharCode(...data));
+
+                await timeCharacteristic?.writeWithResponse(base64Data);
+                console.log('Data written successfully');
+              } catch (error) {
+                console.error('Error writing data: ', error);
+              }
         }
-        // Get the current time in milliseconds since epoch
-        const currentTimeMillis = new Date().getTime();
-        const data = new Uint8Array(new Int32Array([currentTimeMillis]).buffer);
-        // Encode the Uint8Array as a Base64 string
-        const base64Data = btoa(String.fromCharCode(...data));
-
-        try {
-            await characteristic.writeWithResponse(base64Data);
-            console.log('Data written successfully');
-          } catch (error) {
-            console.error('Error writing data: ', error);
-          }
-
-        //SEND DATA
     };
 
 
