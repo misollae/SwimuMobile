@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   const handlePress = () => {
     console.log('Button pressed');
-    onStartTrain(); // call the function from useBLE
+    onStartTrain; // call the function from useBLE
   };
 
   return (

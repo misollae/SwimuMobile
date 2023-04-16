@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-bitwise */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState } from 'react';
@@ -13,9 +12,6 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 type PermissionCallback = (result: boolean) => void;
 const bleManager = new BleManager();
 
-const SPORT_DEVICE_SERVICE_UUID       = '0000183E-0000-1000-8000-00805F9B34FB';
-const SPORT_DEVICE_CHARATERISTIC_UUID = '00002B3C-0000-1000-8000-00805F9B34FB';
-
 const TIME_SERVICE_UUID               = '00001805-0000-1000-8000-00805F9B34FB';
 const TIME_SERVICE_CHARATERISTIC_UUID = '00002A2B-0000-1000-8000-00805F9B34FB';
 
@@ -25,13 +21,11 @@ interface BluetoothLowEnergyApi {
     connectToDevice(device: Device): Promise<void>;
     allDevices: Device[];
     onStartTrain(): void;
-
 }
 
 export default function useBLE(): BluetoothLowEnergyApi {
     const [allDevices, setAllDevices]  = useState<Device[]>([]);
-    const [device, setConnectedDevice] = useState<Device| null>(null);
-    const [trainingInfo, setTrainingInfo] = useState<number>(0);
+    const [connectedDevice, setConnectedDevice] = useState<Device| null>(null);
 
     const requestPermissions = async (callback: PermissionCallback) => {
         if (Platform.OS === 'android') {
@@ -72,63 +66,31 @@ export default function useBLE(): BluetoothLowEnergyApi {
             setConnectedDevice(deviceConnection);
             bleManager.stopDeviceScan();
             await deviceConnection.discoverAllServicesAndCharacteristics();
-            //startStreamingData(device);
+            //onStartTrain(device);
         } catch (e) {
             console.log('Error when connecting: ', e);
         }
     };
 
-    const startStreamingData = async (device: Device) => {
-        if (device) {
-            device.monitorCharacteristicForService(
-                SPORT_DEVICE_SERVICE_UUID,
-                SPORT_DEVICE_CHARATERISTIC_UUID,
-                onDataUpdate
-            );
-        } else {
-            console.error('NO DEVICE');
-        }
-    };
-
-    const onStartTrain = async () => {
-        if (device) {
+        const onStartTrain = async () => {
+        if (connectedDevice) {
             console.log('Olá');
             try {
-                const characteristics = await device.characteristicsForService(TIME_SERVICE_UUID);
-                const timeCharacteristic = characteristics.find(c => c.uuid === TIME_SERVICE_CHARATERISTIC_UUID);
-
                 const currentTimeMillis = new Date().getTime();
                 const data = new Uint8Array(new Int32Array([currentTimeMillis]).buffer);
                 const base64Data = btoa(String.fromCharCode(...data));
 
-                await timeCharacteristic?.writeWithResponse(base64Data);
+                await bleManager.writeCharacteristicWithResponseForDevice(
+                        connectedDevice.id,
+                        TIME_SERVICE_UUID,
+                        TIME_SERVICE_CHARATERISTIC_UUID,
+                        base64Data);
+
                 console.log('Data written successfully');
               } catch (error) {
                 console.error('Error writing data: ', error);
               }
         }
-    };
-
-
-    const onDataUpdate = (
-        error: BleError | null,
-        characteristic: Characteristic | null,
-    ) => {
-        if (error){
-            console.error(error);
-            return;
-        } else if (!characteristic?.value){
-            console.log('No charateristic');
-            return;
-        }
-
-        let rawData = atob(characteristic.value);
-        const valueRoll   = (rawData.charCodeAt(1) << 8) | rawData.charCodeAt(0);
-        const valuePitch  = (rawData.charCodeAt(9) << 8) | rawData.charCodeAt(8);
-
-        console.log(characteristic.value);
-        console.log('Roll: ' + valueRoll + ' Pitch: ' + valuePitch);
-        setTrainingInfo(valueRoll);
     };
 
     return {

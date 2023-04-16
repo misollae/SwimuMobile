@@ -41,7 +41,7 @@ const BluetoothScreen = (props: ScreenNavigation) => {
   };
 
   const tryConnect = async (device: Device) => {
-    connectToDevice(device);
+    await connectToDevice(device);
   };
 
   return (
