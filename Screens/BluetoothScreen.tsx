@@ -86,7 +86,7 @@ const BluetoothScreen = (props: ScreenNavigation) => {
       </ScrollView>
       <Button
         title="Go to HomeScreen"
-        onPress={() => props.navigation.navigate('HomeScreen', { serializaedBLE: serialized })}
+        onPress={() => props.navigation.navigate('HomeScreen', { serializedBLE: serialized })}
       />
     </SafeAreaView>
   );
