@@ -14,9 +14,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-// import { BluetoothLowEnergyApi } from '../useBLE';
+import useBLE from '../useBLE';
 
-// import useBLE from '../useBLE';
 type HomeScreenParams = {
   serializedBLE: string;
 };
@@ -24,9 +23,10 @@ type HomeScreenParams = {
 const HomeScreen = () => {
   const route = useRoute();
   const { serializedBLE } = route.params as HomeScreenParams;
-  console.log(serializedBLE);
   const parsedBLE = serializedBLE ? JSON.parse(serializedBLE) : undefined;
-  const { onStartTrain } = parsedBLE || {};
+  const { onStartTrain } = useBLE();
+  const { connectedDevice } = parsedBLE;
+
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -34,7 +34,7 @@ const HomeScreen = () => {
 
   const handlePress = () => {
     console.log('Button pressed');
-    onStartTrain; // call the function from useBLE
+    onStartTrain(connectedDevice); // call the function from useBLE
   };
 
   return (

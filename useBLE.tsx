@@ -21,7 +21,8 @@ interface BluetoothLowEnergyApi {
     scanForDevices(): void;
     connectToDevice(device: Device): Promise<void>;
     allDevices: Device[];
-    onStartTrain(): void;
+    connectedDevice: Device | null;
+    onStartTrain(device:Device): void;
 }
 export type { BluetoothLowEnergyApi };
 
@@ -73,17 +74,9 @@ export default function useBLE(): BluetoothLowEnergyApi {
         }
     };
 
-    const onStartTrain = async () => {
-        console.log('Antes do if');
-        if (connectedDevice) {
-            console.log('Depois do if');
+    const onStartTrain = async (device: Device) => {
+        if (device) {
             try {
-                /*const currentTimeMillis = new Date().getTime();
-                const data = new Uint8Array(new Uint8Array([currentTimeMillis]).buffer);
-                const base64Data = btoa(String.fromCharCode(...data));
-                console.log(data);
-                console.log(base64Data);*/
-
                 const now            = new Date();
                 const timezoneOffset = now.getTimezoneOffset() / -60;
                 const timeBytes      = new Uint8Array(10);
@@ -102,7 +95,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
                 console.log(base64Data);
 
                 await bleManager.writeCharacteristicWithResponseForDevice(
-                    connectedDevice.id,
+                    device.id,
                     TIME_SERVICE_UUID,
                     TIME_SERVICE_CHARATERISTIC_UUID,
                     base64Data
@@ -120,6 +113,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
         scanForDevices,
         connectToDevice,
         allDevices,
+        connectedDevice,
         onStartTrain,
     };
 }
