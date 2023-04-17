@@ -13,10 +13,18 @@ import {
   Dimensions,
   StyleSheet,
 } from 'react-native';
-import useBLE from '../useBLE';
+import { useRoute } from '@react-navigation/native';
+import { BluetoothLowEnergyApi } from '../useBLE';
+
+// import useBLE from '../useBLE';
+
 
 const HomeScreen = () => {
-  const {onStartTrain} = useBLE();
+  const route = useRoute();
+  // const { useBLE } = route.params as { useBLE: useBLE };
+  const { useBLE } = route.params as { useBLE: BluetoothLowEnergyApi };
+  // const { useBLE } = route.params as { useBLE: ReturnType<typeof useBLE> };
+  const {onStartTrain} = useBLE;
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
