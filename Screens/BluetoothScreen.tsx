@@ -26,7 +26,6 @@ const BluetoothScreen = (props: ScreenNavigation) => {
   const useble = useBLE();
   const {requestPermissions, scanForDevices, allDevices, connectToDevice} = useble;
   const serialized = JSON.stringify(useble);
-  console.log(serialized);
   const [isScanning, setIsScanning] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';

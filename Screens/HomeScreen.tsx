@@ -24,6 +24,7 @@ type RouteParams = {
 const HomeScreen = () => {
   const route = useRoute();
   const { serializedBLE } = route.params as RouteParams;
+  console.log(serializedBLE);
   const parsedBLE = JSON.parse(serializedBLE);
   const { onStartTrain } = parsedBLE || {};
   const isDarkMode = useColorScheme() === 'dark';
