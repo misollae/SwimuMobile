@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState } from 'react';
@@ -66,25 +67,45 @@ export default function useBLE(): BluetoothLowEnergyApi {
             setConnectedDevice(deviceConnection);
             bleManager.stopDeviceScan();
             await deviceConnection.discoverAllServicesAndCharacteristics();
-            //onStartTrain(device);
         } catch (e) {
             console.log('Error when connecting: ', e);
         }
     };
 
-        const onStartTrain = async () => {
+    const onStartTrain = async () => {
+        console.log('Antes do if');
         if (connectedDevice) {
-            console.log('Olá');
+            console.log('Depois do if');
             try {
-                const currentTimeMillis = new Date().getTime();
-                const data = new Uint8Array(new Int32Array([currentTimeMillis]).buffer);
+                /*const currentTimeMillis = new Date().getTime();
+                const data = new Uint8Array(new Uint8Array([currentTimeMillis]).buffer);
                 const base64Data = btoa(String.fromCharCode(...data));
+                console.log(data);
+                console.log(base64Data);*/
+
+                const now            = new Date();
+                const timezoneOffset = now.getTimezoneOffset() / -60;
+                const timeBytes      = new Uint8Array(10);
+
+                timeBytes[0] = now.getUTCFullYear()  & 0xff;
+                timeBytes[1] = (now.getUTCFullYear() >> 8) & 0xff;
+                timeBytes[2] = now.getUTCMonth() + 1;
+                timeBytes[3] = now.getUTCDate();
+                timeBytes[4] = now.getUTCHours() + timezoneOffset;
+                timeBytes[5] = now.getUTCMinutes();
+                timeBytes[6] = now.getUTCSeconds();
+                timeBytes[7] = now.getUTCDay();
+
+                const base64Data = btoa(String.fromCharCode(...timeBytes));
+                console.log(timeBytes);
+                console.log(base64Data);
 
                 await bleManager.writeCharacteristicWithResponseForDevice(
-                        connectedDevice.id,
-                        TIME_SERVICE_UUID,
-                        TIME_SERVICE_CHARATERISTIC_UUID,
-                        base64Data);
+                    connectedDevice.id,
+                    TIME_SERVICE_UUID,
+                    TIME_SERVICE_CHARATERISTIC_UUID,
+                    base64Data
+                );
 
                 console.log('Data written successfully');
               } catch (error) {
