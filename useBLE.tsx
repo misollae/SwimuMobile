@@ -22,6 +22,7 @@ interface BluetoothLowEnergyApi {
     allDevices: Device[];
     onStartTrain(): void;
 }
+export type { BluetoothLowEnergyApi };
 
 export default function useBLE(): BluetoothLowEnergyApi {
     const [allDevices, setAllDevices]  = useState<Device[]>([]);

@@ -23,7 +23,8 @@ interface ScreenNavigation {
 }
 
 const BluetoothScreen = (props: ScreenNavigation) => {
-  const {requestPermissions, scanForDevices, allDevices, connectToDevice} = useBLE();
+  const useble = useBLE();
+  const {requestPermissions, scanForDevices, allDevices, connectToDevice} = useble;
   const [isScanning, setIsScanning] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -84,7 +85,7 @@ const BluetoothScreen = (props: ScreenNavigation) => {
       </ScrollView>
       <Button
         title="Go to HomeScreen"
-        onPress={() => props.navigation.navigate('HomeScreen')}
+        onPress={() => props.navigation.navigate('HomeScreen', { useBLE: useble })}
       />
     </SafeAreaView>
   );
