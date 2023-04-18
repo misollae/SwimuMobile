@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/react-in-jsx-scope */
+
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {
@@ -13,8 +13,10 @@ import {
   Dimensions,
   StyleSheet,
 } from 'react-native';
+import React, { useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import useBLE from '../useBLE';
+import DashboardComponent from '../Components/Dashboard';
 
 type HomeScreenParams = {
   serializedBLE: string;
@@ -26,6 +28,8 @@ const HomeScreen = () => {
   const parsedBLE = serializedBLE ? JSON.parse(serializedBLE) : undefined;
   const { onStartTrain } = useBLE();
   const { connectedDevice } = parsedBLE;
+  const [visible, setVisible] = useState(true);
+
 
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
@@ -35,6 +39,8 @@ const HomeScreen = () => {
   const handlePress = () => {
     console.log('Button pressed');
     onStartTrain(connectedDevice); // call the function from useBLE
+    setVisible(false);
+
   };
 
   return (
@@ -59,12 +65,13 @@ const HomeScreen = () => {
                 textAlign: 'center',
                 color: isDarkMode ? Colors.white : Colors.black,
               }}>
-              Bluetooth Test
+              Welcome
             </Text>
           </View>
+          {visible && (<Button title="Start Train" onPress={handlePress} color="#307ecc" />)}
         </View>
+          <DashboardComponent/>
       </ScrollView>
-      <Button title="Start Train" onPress={handlePress} />
     </SafeAreaView>
   );
 };
