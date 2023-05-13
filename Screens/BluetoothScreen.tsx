@@ -17,8 +17,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import useBLE from '../useBLE';
-import {RNSerialport} from 'react-native-serialport';
-import React from 'react';
+
 
 
 interface ScreenNavigation {
@@ -44,42 +43,6 @@ const BluetoothScreen = (props: ScreenNavigation) => {
       }
     });
   };
-  const startList = () =>{
-    RNSerialport.list()
-  .then(ports => {
-      console.log('Available ports:', ports);
-  
-      // RNSerialport.writeString('HELLO');
-      // Find the port you want to connect to (in this example, we assume it's the first port)
-      const port = ports[0];
-  
-      // Open the port
-      RNSerialport.open(port.path, {
-        baudRate: 9600,
-        dataBits: 8,
-        parity: 'none',
-        stopBits: 1,
-      })
-        .then(port => {
-          console.log(`Connected to port ${port.path}`);
-  
-          // Send a message to the board
-          RNSerialport.writeString('Hello, board!');
-  
-          // Receive data from the board
-          RNSerialport.onData(data => {
-            console.log(`Received data from board: ${data}`);
-          });
-        })
-        .catch(error => {
-          console.error(`Failed to open port: ${error.message}`);
-        });
-    })
-    .catch(error => {
-      console.error(`Failed to list available ports: ${error.message}`);
-    });
-  }
-  
 
   const tryConnect = async (device: Device) => {
     await connectToDevice(device);
@@ -125,8 +88,7 @@ const BluetoothScreen = (props: ScreenNavigation) => {
       </ScrollView>
       <Button
         title="Go to HomeScreen"
-        onPress={startList}
-        // onPress={() => props.navigation.navigate('HomeScreen', { serializedBLE: serialized })}
+        onPress={() => props.navigation.navigate('HomeScreen', {serializedBLE: serialized})}
       />
     </SafeAreaView>
   );
