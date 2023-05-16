@@ -6,6 +6,7 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
 
 - **Setup React Native on your project**, follow [these](https://reactnative.dev/docs/environment-setup) instructions, based on your operating system - ***make sure to use the React Native CLI Quickstart rather than the Expo Go Quickstart***;
 
-- **Install the necessary React modules**, using the following command on the directory's terminal:```
-npm install
-```
+- **Install the necessary React modules**, using the following command on the directory's terminal:
+  ```
+  npm install
+  ```
