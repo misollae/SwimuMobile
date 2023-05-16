@@ -11,5 +11,6 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
   npm install
   ```
 
-## Running
+## Running the Application on your Phone
+
 
