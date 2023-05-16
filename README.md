@@ -3,4 +3,4 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
 
 ## Setup
 - **Download or clone** this source code into a new directory;
-- **Setup react native on your project**, follow [these]((https://reactnative.dev/docs/environment-setup) instructions, based on your operating system - ***make sure to use the React Native CLI Quickstart rather than the Expo Go Quickstart***;
+- **Setup react native on your project**, follow [these](https://reactnative.dev/docs/environment-setup) instructions, based on your operating system - ***make sure to use the React Native CLI Quickstart rather than the Expo Go Quickstart***;
