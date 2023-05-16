@@ -12,7 +12,7 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
   ```
 
 ## Running the Application on your Phone
-The minimum version if you're using an Android is Android 5.0 (Lollipop), if you're running on iOS it must be
+The minimum version if you're using an Android is Android 5.0 (Lollipop), if you're running on iOS it must be at least version 12.4.
 
 - **Enable Developer Mode on your phone:** on your iOS go to Settings > Privacy & Security > Developer Mode to show the Developer Mode toggle switch, on your Android go to Settings > About Device/Phone > Software Information > Tap “Build number” seven times > Enter your pattern, PIN or password to enable the Developer options menu - ***make sure USB debugging is turned on on this menu***;
 
