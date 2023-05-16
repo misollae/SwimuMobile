@@ -25,5 +25,11 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
 
 You will now have the application installed on your phone and you'll be able to run it normally, without the cable connected.
 
+## Related Repositories
+To get the project fully working make sure you've completed setting up all of the following repositories:
+
+- [Swimu Mobile](https://github.com/misollae/SwimuMobile): (You're already here);
+- [Swimu Web](https://github.com/misollae/SwimuWeb): This will give you the code necessary to lauch the Web/browser application;
+- [Swimu Sensor](https://github.com/misollae/Swimu-Sensor): This will give you the code necessary to get your sensor ready;
 
 
