@@ -31,7 +31,7 @@ You will now have the application installed on your phone and you'll be able to 
 To get the project fully working make sure you've completed setting up all of the following repositories:
 
 - [Swimu Mobile](https://github.com/misollae/SwimuMobile): (You're already here);
-- [Swimu Web](https://github.com/misollae/SwimuWeb): This will give you the code necessary to lauch the Web/browser application;
+- [Swimu Web](https://github.com/misollae/SwimuWeb): This will give you the code necessary to launch the Web/browser application;
 - [Swimu Sensor](https://github.com/misollae/Swimu-Sensor): This will give you the code necessary to get your sensor ready;
 
 
