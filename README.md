@@ -10,3 +10,6 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
   ```
   npm install
   ```
+
+## Running
+
