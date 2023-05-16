@@ -16,5 +16,10 @@ Based on the low-cost wearable device called Swimu, this repository contains an 
 
 - **Connect your phone to your computer** via cable, run ```adb devices``` to see if your phone's been recognized - if you run into any issues, such as the devices being offline or unauthorized turn the USB debugging on your phone off, run ```abd kill-server```, turn USB debugging back on and run ```abd start-server```, this should bring up a prompt to accept debugging from the device;
 
+- **Run the code**, and select the device you're running on:
+  ```
+  npx react-native start
+  ``` 
+
 
 
