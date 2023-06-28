@@ -34,6 +34,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
         if (Platform.OS === 'android') {
             const permissions = [
                 PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+                PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
               ];
 
@@ -53,7 +54,7 @@ export default function useBLE(): BluetoothLowEnergyApi {
 
     const scanForDevices = () => {
         bleManager.startDeviceScan(null, null, (error, device) => {
-            if (error) {console.log(error);}
+            if (error) {console.log(error.reason);}
             if (device && device.name?.includes('Swimu')) {
                 setAllDevices((prevState) => {
                     if (!isDuplicateDevice(prevState, device)) {return [...prevState, device];}
