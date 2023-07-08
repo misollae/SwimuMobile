@@ -64,12 +64,13 @@ export default function useBLE(): BluetoothLowEnergyApi {
         });
     };
 
-    const connectToDevice = async(device: Device) => {
+    const connectToDevice = async(device: Device, ) => {
         try {
             const deviceConnection = await bleManager.connectToDevice(device.id);
             setConnectedDevice(deviceConnection);
             bleManager.stopDeviceScan();
             await deviceConnection.discoverAllServicesAndCharacteristics();
+            console.log('ok');
         } catch (e) {
             console.log('Error when connecting: ', e);
         }
